@@ -1,0 +1,161 @@
+<%- include('components/default-head-tags.ejs') %>
+
+<body class="bg-gray-500 text-gray-800 antialiased">
+  <header class="border-b bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-2xl font-semibold tracking-tight">User Management</h1>
+      <div class="flex items-center gap-2">
+        <a href="/user-form" class="inline-flex items-center gap-2 rounded-xl bg-gray-100 px-3 py-2 text-sm font-medium hover:bg-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+            <path d="M12 4.5a.75.75 0 0 1 .75.75v6h6a.75.75 0 0 1 0 1.5h-6v6a.75.75 0 0 1-1.5 0v-6h-6a.75.75 0 0 1 0-1.5h6v-6A.75.75 0 0 1 12 4.5Z" />
+          </svg>
+          Add User
+        </a>
+        <a href="/export" class="inline-flex items-center gap-2 rounded-xl bg-black text-white px-3 py-2 text-sm font-medium hover:bg-gray-800">
+          Export
+        </a>
+      </div>
+    </div>
+  </header>
+
+
+  <% if (success_message.length > 0) { %>
+  <div class="bg-green-400 font-bold px-5 py-2 mt-4 h-fit">
+    <%= success_message %>
+  </div>
+  <% } %>
+
+  <% if (error_message.length > 0) { %>
+  <div class="bg-red-400 font-bold px-5 py-2 mt-4 h-fit">
+    <%= error_message %>
+  </div>
+  <% } %>
+  <main class="max-w-6xl mx-auto px-4 py-6">
+    <section class="mb-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="relative">
+        <input value="<%= filters.name %>" id="name-filter" type="text" placeholder="Search by name" class="w-full rounded-2xl border border-gray-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-gray-200" />
+        <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4 text-gray-500">
+            <path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 1 0 13.5 6.75 6.75 0 0 1 0-13.5Zm0 1.5a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Zm8.03 13.28a.75.75 0 1 1-1.06 1.06l-3.25-3.25a.75.75 0 0 1 1.06-1.06l3.25 3.25Z" clip-rule="evenodd" />
+          </svg>
+        </div>
+      </div>
+      <select value="<%= filters.role %>" id="role-filter" class="rounded-2xl border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-gray-200">
+        <option value="">All Roles</option>
+        <option>Admin</option>
+        <option>Manager</option>
+        <option>Editor</option>
+        <option>Viewer</option>
+      </select>
+      <select value="<%= filters.status %>" id="status-filter" class="rounded-2xl border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-gray-200">
+        <option value="">Any Status</option>
+        <option>Active</option>
+        <option>Invited</option>
+        <option>Suspended</option>
+      </select>
+      <select value="<%= filters.date %>" id="date-filter" class="rounded-2xl border border-gray-300 bg-white px-3 py-2.5 text-sm focus:outline-none focus:ring-4 focus:ring-gray-200">
+        <option>Sort: Newest</option>
+        <option>Sort: Oldest</option>
+        <option>Sort: A → Z</option>
+        <option>Sort: Z → A</option>
+      </select>
+    </section>
+
+    <section class="bg-white border rounded-2xl shadow-sm">
+      <div class="overflow-x-auto rounded-2xl">
+        <table class="min-w-full text-left align-middle">
+          <thead class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
+            <tr>
+              <th class="px-4 py-3">User</th>
+              <th class="px-4 py-3">Email</th>
+              <th class="px-4 py-3">Role</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Created</th>
+              <th class="px-4 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <% for (let i=0; i < usersData.users.length; i++) { %>
+            <tr class="hover:bg-gray-50" id="<%= usersData.users[i].id %>">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <span class="inline-flex size-9 items-center justify-center rounded-full bg-indigo-100 text-indigo-700 text-sm font-semibold">VM</span>
+                  <div>
+                    <div class="font-medium"><%= usersData.users[i].name%></div>
+                    <div class="text-xs text-gray-500">@<%= usersData.users[i].username %></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3"><%= usersData.users[i].email%></td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium"><%=usersData.users[i].role%></span>
+              </td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700">
+                  <span class="size-1.5 rounded-full  <%= usersData.users[i].status === 'Active' ? 'bg-green-600' : 'bg-yellow-500' %>"></span>
+                  <%= usersData.users[i].status %>
+                </span>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= (new Date(usersData.users[i].createdAt + 'T00:00:01')).toLocaleDateString("pt-BR") %></td>
+              <td class="px-4 py-3">
+                <div class="flex items-center justify-end gap-2">
+                  <a href="/user-form/<%= usersData.users[i].id %>" class="rounded-xl border px-3 py-1.5 text-sm hover:bg-gray-50">Edit</a>
+                  <button type="button" class="rounded-xl bg-red-50 px-3 py-1.5 text-sm text-red-700 hover:bg-red-100" onclick="deleteUser('<%= usersData.users[i].id %>')">Delete</button>
+                </div>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between px-4 py-3 border-t bg-gray-50">
+        <p class="text-sm text-gray-600">
+          Showing
+          <span class="font-medium">
+            <%= (usersData.pagination)  %>-<%= Math.min(usersData.pagination * usersData.limit, usersData.total) %>
+          </span>
+          of
+          <span class="font-medium">
+            <%= usersData.total %>
+          </span>
+          users
+        </p>
+        <nav class="inline-flex items-center gap-1">
+          <% if (usersData.pagination > 1) { %>
+          <a href="#" class="rounded-xl border px-3 py-1.5 text-sm hover:bg-gray-100" onclick="setPagination('<%= usersData.pagination - 1 %>')">Previous</a>
+          <% } %>
+          <% 
+            const totalPages = Math.ceil(usersData.total / usersData.limit);
+            const currentPage = usersData.users.pagination;
+            const pageButtons = [1];
+            const start = Math.max(2, currentPage - 1);
+            const end = Math.min(usersData.total - 1, currentPage + 1);
+            for (let i = start; i <= end; i++) pageButtons.push(i);
+            pageButtons.push(usersData.total);
+            
+            for (let i = 0; i < pageButtons.length; i++) {
+              let p = pageButtons[i];
+              if (p == currentPage) { 
+            %>
+          <a href="#" class="rounded-xl bg-black text-white px-3 py-1.5 text-sm"><%= p %></a>
+          <% } else { %>
+          <a href="#" class="rounded-xl border px-3 py-1.5 text-sm hover:bg-gray-100" onclick="setPagination('<%= p %>')"><%= p %></a>
+          <% }
+            }
+          %>
+          <% if (usersData.total > usersData.pagination * usersData.limit) { %>
+          <a href="#" class="rounded-xl border px-3 py-1.5 text-sm hover:bg-gray-100" onclick="setPagination('<%= usersData.pagination + 1 %>')">Next</a>
+          <% } %>
+        </nav>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-xs text-gray-500">
+    Built with Tailwind CSS - no JavaScript included.
+  </footer>
+</body>
+
+</html>

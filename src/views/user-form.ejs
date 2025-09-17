@@ -1,0 +1,66 @@
+<%- include('components/default-head-tags.ejs') %>
+
+<body class="bg-gray-500 text-gray-800">
+  <% if (error_message) { %>
+  <div class="bg-red-400 font-bold px-5 py-2 mt-4 h-fit">
+    <%= error_message %>
+  </div>
+  <% } %>
+  <main class="grid h-screen">
+    <section class="self-center">
+      <div class="md:col-span-2 bg-white border rounded-2xl p-5 shadow-sm w-[800px] mx-auto">
+        <h2 class="text-lg font-semibold mb-4">Create / Edit User</h2>
+        <form 
+          <% if (!currentId) { %> 
+            action="/user-form" 
+          <% } else { %>
+            action="/user-form<%=`/${currentId}`%>"
+          <% } %>
+          id="user-form" method="POST"
+          class="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        >
+          <div>
+            <label for="name" class="block text-sm text-gray-600 mb-1">Full Name</label>
+            <input <% if (previousBody.name) { %> value="<%= previousBody.name %>" <% } %> name="name" type="text" placeholder="Jane Doe" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200" />
+          </div>
+          <div>
+            <label for="email" class="block text-sm text-gray-600 mb-1">Email</label>
+            <input <% if (previousBody.email) { %> value="<%= previousBody.email %>" <% } %> name="email" type="email" placeholder="jane@example.com" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200" />
+          </div>
+          <div>
+            <label for="role" class="block text-sm text-gray-600 mb-1">Role</label>
+            <select <% if (previousBody.role) { %> value="<%= previousBody.role %>" <% } %> name="role" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200">
+              <option>Viewer</option>
+              <option>Editor</option>
+              <option>Manager</option>
+              <option>Admin</option>
+            </select>
+          </div>
+          <div>
+            <label for="status" class="block text-sm text-gray-600 mb-1">Status</label>
+            <select <% if (previousBody.status) { %> value="<%= previousBody.status %>" <% } %> name="status" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200">
+              <option>Active</option>
+              <option>Invited</option>
+              <option>Suspended</option>
+            </select>
+          </div>
+          <div>
+            <label for="password" class="block text-sm text-gray-600 mb-1">Password</label>
+            <input <% if (previousBody.password) { %> value="<%= previousBody.password %>" <% } %> name="password" type="password" placeholder="••••••••" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200" />
+          </div>
+          <div>
+            <label for="confirm_password" class="block text-sm text-gray-600 mb-1">Confirm Password</label>
+            <input <% if (previousBody.confirm_password) { %> value="<%= previousBody.confirm_password %>" <% } %> name="confirm_password" type="password" placeholder="••••••••" class="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 focus:outline-none focus:ring-4 focus:ring-gray-200" />
+          </div>
+          <div class="sm:col-span-2 flex items-center justify-between pt-2">
+            <div class="flex gap-2">
+              <button type="reset" class="rounded-xl border px-4 py-2 text-sm hover:bg-gray-50">Cancel</button>
+              <button type="submit" class="rounded-xl bg-black text-white px-4 py-2 text-sm">Save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+</body>
